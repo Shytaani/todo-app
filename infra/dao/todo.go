@@ -41,3 +41,17 @@ func (w wrapper) Create(ctx context.Context, entity *todo.Todo) (*todo.Todo, err
 
 	return entity, nil
 }
+
+func (w wrapper) GetTodos(ctx context.Context) ([]*todo.Todo, error) {
+	var todos []*todo.Todo
+	for _, data := range datas {
+		todos = append(todos, &todo.Todo{
+			ID:        todo.ID(data.ID),
+			Title:     todo.Title(data.Title),
+			Body:      todo.Body(data.Body),
+			CreatedAt: data.CreatedAt,
+			UpdatedAt: data.UpdatedAt,
+		})
+	}
+	return todos, nil
+}

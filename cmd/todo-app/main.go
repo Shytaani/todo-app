@@ -28,5 +28,7 @@ func main() {
 
 	e.POST("/todos", th.Create)
 
+	e.GET("/todos", th.GetTodos)
+
 	e.Logger.Fatal(e.Start(":1323"))
 }

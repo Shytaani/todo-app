@@ -19,6 +19,7 @@ func NewTodo(r repository.Todo) Todo {
 
 type Todo interface {
 	Create(ctc context.Context, title, body string) (*CreateTodoResponse, error)
+	GetTodos(ctx context.Context) (*GetTodosResponse, error)
 }
 
 type CreateTodoResponse struct {
@@ -26,6 +27,10 @@ type CreateTodoResponse struct {
 	Body      string
 	CreatedAt time.Time
 	UpdatedAt time.Time
+}
+
+type GetTodosResponse struct {
+	Todos []*todo.Todo
 }
 
 func (w wrapper) Create(ctx context.Context, title, body string) (*CreateTodoResponse, error) {
@@ -44,5 +49,16 @@ func (w wrapper) Create(ctx context.Context, title, body string) (*CreateTodoRes
 		Body:      t.Body.String(),
 		CreatedAt: t.CreatedAt,
 		UpdatedAt: t.UpdatedAt,
+	}, nil
+}
+
+func (w wrapper) GetTodos(ctx context.Context) (*GetTodosResponse, error) {
+	todos, err := w.r.GetTodos(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get todos: %w", err)
+	}
+
+	return &GetTodosResponse{
+		Todos: todos,
 	}, nil
 }
